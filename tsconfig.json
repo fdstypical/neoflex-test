@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "outDir": "dist"
+  },
+  "lib": ["es2015"],
+  "include": [
+    "src/**/*",
+    "src/**/**/*",
+    "index.d.ts"
+  ]
+}
+
