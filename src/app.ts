@@ -35,7 +35,7 @@ export class App {
       this._app.use(this._prefix, module.register().controller.router);
       this._app.use((_, res) =>
         res.status(404).json({ status: 404, message: 'Not Found' }),
-      );
+      ); // just for match '*' (404 error)
     }
   }
 }

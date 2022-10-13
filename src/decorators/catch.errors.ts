@@ -1,7 +1,11 @@
 import { ExpressHandlerDescriptor } from '../types';
 
-export default (useNext: boolean = false) => {
-  return (target: any, key: string | Symbol, descriptor: ExpressHandlerDescriptor) => {
+export default (useNext = false) => {
+  return (
+    target: any,
+    key: string | symbol,
+    descriptor: ExpressHandlerDescriptor,
+  ): void => {
     const method = descriptor.value;
 
     descriptor.value = async function (...args) {
