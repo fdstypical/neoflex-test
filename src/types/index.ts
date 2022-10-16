@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
+export interface IDict<T> {
+  [key: string]: T;
+}
+
 export interface CalcDto {
   leftOperand: number;
   rightOperand: number;

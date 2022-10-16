@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import CatchErrors from '../../decorators/catch.errors';
-import { CalcDto } from '../../types';
+import { CalcDto, IDict } from '../../types';
 import { BaseController } from '../../abstracts/base.controller';
 import { CalcService } from './calc.service';
 
@@ -29,7 +29,7 @@ export class CalcController<T extends CalcService> extends BaseController<T> {
 
   @CatchErrors()
   public div(req: Request, res: Response): void {
-    const dto = this.validateParams(req);
+    const dto = this.validateParams(req, false);
     res.status(200).json(this.service.div(dto));
   }
 
@@ -41,12 +41,23 @@ export class CalcController<T extends CalcService> extends BaseController<T> {
     return this;
   }
 
-  private validateParams(req: Request): CalcDto {
+  private validateZeroDivision(dto: IDict<any>): void {
+    const isIncludesZero = Object.values(dto).some((item) => item === 0);
+
+    if (isIncludesZero) {
+      throw new Error('Zero Division Error');
+    }
+  }
+
+  private validateParams(req: Request, allowZero: boolean = true): CalcDto {
     const leftOperand = parseFloat(req.params.num1);
     const rightOperand = parseFloat(req.params.num2);
 
     if (Number.isNaN(leftOperand) || Number.isNaN(rightOperand)) {
-      throw new Error("Bad request! Parameters doesn't match");
+      throw new Error('Bad request. Parameters must be a number.');
+    }
+    if (!allowZero) {
+      this.validateZeroDivision({ rightOperand });
     }
 
     return {
