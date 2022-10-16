@@ -3,6 +3,7 @@ import CatchErrors from '../../decorators/catch.errors';
 import { CalcDto, IDict } from '../../types';
 import { BaseController } from '../../abstracts/base.controller';
 import { CalcService } from './calc.service';
+import { ApiExceptioon } from '../../exceptions/app.exception';
 
 export class CalcController<T extends CalcService> extends BaseController<T> {
   constructor(service: T) {
@@ -45,7 +46,7 @@ export class CalcController<T extends CalcService> extends BaseController<T> {
     const isIncludesZero = Object.values(dto).some((item) => item === 0);
 
     if (isIncludesZero) {
-      throw new Error('Zero Division Error');
+      throw ApiExceptioon.ValidationError([new Error('Zero Division Error')]);
     }
   }
 
@@ -54,7 +55,9 @@ export class CalcController<T extends CalcService> extends BaseController<T> {
     const rightOperand = parseFloat(req.params.num2);
 
     if (Number.isNaN(leftOperand) || Number.isNaN(rightOperand)) {
-      throw new Error('Bad request. Parameters must be a number.');
+      throw ApiExceptioon.ValidationError([
+        new Error('Bad request. Parameters must be a number.'),
+      ]);
     }
     if (!allowZero) {
       this.validateZeroDivision({ rightOperand });

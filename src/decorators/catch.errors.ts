@@ -16,8 +16,17 @@ export default (useNext = false) => {
         const [, res, next] = args;
 
         if (useNext && next) next();
-        else
-          res.status(400).json({ message: error?.message || 'Something went wrong ;(' });
+        else {
+          const statusCode: number = error?.status || 500;
+          const message: string = error?.message || 'Something went wrong ;(';
+          const stackTrace: Error[] = error?.stackTrace || [];
+          const stackTraceMessages: string[] = stackTrace.map((error) => error.message);
+
+          res.status(statusCode).json({
+            message,
+            ...(stackTrace.length > 0 ? { stackTrace: stackTraceMessages } : {}),
+          });
+        }
       }
     };
   };
